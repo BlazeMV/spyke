@@ -17,7 +17,7 @@ class SpykeServiceProvider extends ServiceProvider
     
     protected function makeConfig()
     {
-        $config_path = dirname(__DIR__) . '/config.php';
+        $config_path = dirname(dirname(__DIR__)) . '/config.php';
         $this->publishes([$config_path => config_path('spyke.php')], 'Myst');
     }
     
