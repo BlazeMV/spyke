@@ -2,7 +2,13 @@
 
 namespace Blaze\Spyke;
 
-use Blaze\Spyke\Api\Requests\BaseRequest;
+use Blaze\Spyke\Api\Objects\Episode;
+use Blaze\Spyke\Api\Objects\Game;
+use Blaze\Spyke\Api\Objects\Movie;
+use Blaze\Spyke\Api\Objects\Search;
+use Blaze\Spyke\Api\Objects\Series;
+use Blaze\Spyke\Api\Requests\Request;
+use Blaze\Spyke\Exceptions\SpykeException;
 use Blaze\Spyke\Services\ConfigService;
 
 class OmdbApi
@@ -31,14 +37,89 @@ class OmdbApi
     {
         return $this->api_key;
     }
-
-    /**
-     * @param BaseRequest $request
-     * @return Api\Response
-     * @throws Exceptions\RequestException
-     */
-    public function call(BaseRequest $request)
+    
+    public function search(string $query, string $type=null, int $year=null, int $page=1)
     {
-        return $request->setApi($this)->send();
+        
+        $params = [];
+        $params['s'] = $query;
+        if ($type !== null) $params['type'] = $type;
+        if ($year !== null) $params['y'] = $year;
+        if ($page != 1) $params['page'] = $page;
+        
+        $request = new Request($this);
+        $request->setParams($params);
+        $request->setResponseObject(Search::class);
+        $response = $request->send();
+        
+        return $response;
+    }
+    
+    public function fetchById(string $id, string $type=null, int $year=null, $plot='short')
+    {
+        $params = [];
+        $params['i'] = $id;
+        if ($type !== null) $params['type'] = $type;
+        if ($year !== null) $params['y'] = $year;
+        if ($plot !== 'short') $params['plot'] = $plot;
+    
+        $request = new Request($this);
+        $request->setParams($params);
+        $request->setResponseObject(
+            function (array $data) {
+                switch ($data['Type']) {
+                    case 'movie':
+                        return Movie::class;
+                        break;
+                    case 'series':
+                        return Series::class;
+                        break;
+                    case 'episode':
+                        return Episode::class;
+                        break;
+                    case 'game':
+                        return Game::class;
+                        break;
+                }
+                throw new SpykeException("Unknown response object type");
+            }
+        );
+        $response = $request->send();
+        
+        return $response;
+    }
+    
+    public function fetchByTitle(string $title, string $type=null, int $year=null, $plot='short')
+    {
+        $params = [];
+        $params['t'] = $title;
+        if ($type !== null) $params['type'] = $type;
+        if ($year !== null) $params['y'] = $year;
+        if ($plot !== 'short') $params['plot'] = $plot;
+    
+        $request = new Request($this);
+        $request->setParams($params);
+        $request->setResponseObject(
+            function (array $data) {
+                switch ($data['Type']) {
+                    case 'movie':
+                        return Movie::class;
+                        break;
+                    case 'series':
+                        return Series::class;
+                        break;
+                    case 'episode':
+                        return Episode::class;
+                        break;
+                    case 'game':
+                        return Game::class;
+                        break;
+                }
+                throw new SpykeException("Unknown response object type");
+            }
+        );
+        $response = $request->send();
+        
+        return $response;
     }
 }

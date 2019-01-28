@@ -5,7 +5,7 @@ namespace Blaze\Spyke\Api;
 use Blaze\Spyke\Exceptions\SpykeException;
 use Illuminate\Support\Collection;
 
-class ApiObject extends BaseObject
+abstract class ApiObject extends Collection
 {
     /**
      * If the instance has other nested api objects they should be mentioned in the array returned by implementation
@@ -104,12 +104,18 @@ class ApiObject extends BaseObject
             }
             if ($single_relations->has($key)) {
                 $className = $single_relations->get($key);
+                if (is_callable($className)) {
+                    $className = call_user_func_array($className, [$item]);
+                }
                 $temp = new $className($item);
                 $item = $temp;
             } elseif ($multiple_relations->has($key)) {
-                $className = $multiple_relations->get($key);
                 $temp = [];
                 foreach ($item as $value) {
+                    $className = $multiple_relations->get($key);
+                    if (is_callable($className)) {
+                        $className = call_user_func_array($className, [$value]);
+                    }
                     $temp[] = new $className($value);
                 }
                 $item = collect($temp);
@@ -151,5 +157,26 @@ class ApiObject extends BaseObject
         }
         
         return $property_aliases;
+    }
+    
+    /**
+     * @param string $method
+     * @param array $args
+     * @return mixed|null
+     */
+    public function __call($method, $args)
+    {
+        if (method_exists($this, $method)) {
+            return call_user_func_array($this->$method, $args);
+        } else {
+            if (starts_with($method, 'get')) {
+                $key = str_after($method, 'get');
+                if ($this->has(snake_case($key))) {
+                    return $this->get(snake_case($key));
+                }
+            }
+            //            trigger_error("Call to undefined method '{$method}'");
+            return null;
+        }
     }
 }

@@ -146,6 +146,9 @@ class Response
      */
     public function setResponseObject($class, bool $multiple = false)
     {
+        if (is_callable($class)) {
+            $class = call_user_func_array($class,[$this->getResponseBody()]);
+        }
         if (in_array($class, static::$scalar_types)) {
             $this->object = $this->getResponseBody();
             settype($this->object, $class);
