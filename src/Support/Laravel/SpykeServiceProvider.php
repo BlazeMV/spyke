@@ -26,7 +26,7 @@ class SpykeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(dirname(__DIR__) . '/config.php', 'spyke');
+        $this->mergeConfigFrom(dirname(dirname(__DIR__)) . '/config.php', 'spyke');
 
         $this->app->singleton('Blaze\Spyke\OmdbApi', function () {
             $config = config('spyke');
