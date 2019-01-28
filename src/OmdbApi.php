@@ -38,6 +38,13 @@ class OmdbApi
         return $this->api_key;
     }
     
+    /**
+     * @param string $query
+     * @param string|null $type
+     * @param int|null $year
+     * @param int $page
+     * @return Api\Response
+     */
     public function search(string $query, string $type=null, int $year=null, int $page=1)
     {
         
@@ -55,6 +62,13 @@ class OmdbApi
         return $response;
     }
     
+    /**
+     * @param string $id
+     * @param string|null $type
+     * @param int|null $year
+     * @param string $plot
+     * @return Api\Response
+     */
     public function fetchById(string $id, string $type=null, int $year=null, $plot='short')
     {
         $params = [];
@@ -89,6 +103,13 @@ class OmdbApi
         return $response;
     }
     
+    /**
+     * @param string $title
+     * @param string|null $type
+     * @param int|null $year
+     * @param string $plot
+     * @return Api\Response
+     */
     public function fetchByTitle(string $title, string $type=null, int $year=null, $plot='short')
     {
         $params = [];

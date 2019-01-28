@@ -28,7 +28,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Blaze\\Spyke\\Laravel\\SpykeServiceProvider"
+        "Blaze\\Spyke\\Support\\Laravel\\SpykeServiceProvider"
       ]
     }
   }

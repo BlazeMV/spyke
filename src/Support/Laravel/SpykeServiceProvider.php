@@ -1,6 +1,6 @@
 <?php
 
-namespace Blaze\Spyke\Laravel;
+namespace Blaze\Spyke\Support\Laravel;
 
 use Blaze\Spyke\OmdbApi;
 use Illuminate\Support\ServiceProvider;
