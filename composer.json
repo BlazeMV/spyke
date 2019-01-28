@@ -1,0 +1,35 @@
+{
+  "name": "blaze/spyke",
+  "description": "OMDB Api PHP SDK",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Adam Dawood",
+      "email": "ad.adamdavid72@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "guzzlehttp/guzzle": "~6.2",
+    "illuminate/support": "~5.5",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^4.2"
+  },
+  "suggest": {
+
+  },
+  "autoload": {
+    "psr-4": {
+      "Blaze\\Spyke\\" : "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Blaze\\Spyke\\Laravel\\SpykeServiceProvider"
+      ]
+    }
+  }
+}
